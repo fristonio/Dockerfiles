@@ -6,7 +6,7 @@ LABEL version="0.1"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get install -y apt-utils curl gcc g++ make build-essential
+RUN apt-get install -y apt-utils curl git gcc g++ make build-essential
 # Install node-8
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
@@ -32,7 +32,9 @@ RUN echo "/etc/init.d/postgresql start && exit 0" > /etc/rc.local
 RUN /etc/init.d/postgresql start
 
 USER postgres
-RUN echo "local all  all  trust" >  /etc/postgresql/9.4/main/pg_hba.conf
+RUN echo "local all  all                trust" >  /etc/postgresql/9.4/main/pg_hba.conf && \
+    echo "host  all  all  127.0.0.1/32  trust" >> /etc/postgresql/9.4/main/pg_hba.conf
+
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 EXPOSE 5432
